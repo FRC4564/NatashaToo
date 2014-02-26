@@ -20,23 +20,25 @@ public class Auto {
     DriveTrain dt;
     DriverStation ds;
     Solenoid light;
+    Vision vision;
     
-    Vision vision = new Vision();
     private int hotCounter = 0;
     double startTime;
     int status = Constants.AUTO_STATUS_INIT;
+    int statusCount = 0;
     double driveSpeed = 0;
     
     public Auto(Throweraterenator thrower, DriveTrain dt, DriverStation ds,
-                Solenoid light) {
+                Solenoid light, Vision vision) {
         this.thrower = thrower;
         this.dt = dt;
         this.ds = ds;
         this.light = light;
+        this.vision = vision;
     }
         
     public void updateAuto() {
-        if (status == Constants.AUTO_STATUS_INIT) {
+        /*if (status == Constants.AUTO_STATUS_INIT) {
             System.out.println("INIT Autonomous");
             dt.setSafetyEnabled(false);
             startTime = Timer.getFPGATimestamp();
@@ -87,10 +89,58 @@ public class Auto {
             if (thrower.getStatus() == Constants.THROWER_STATUS_HOME) {
                 status = Constants.AUTO_STATUS_DONE;
             }
-        }
-        // Thrower must be updated every loop
+        }*/
+        
+        switch (statusCount) {
+            case 0 :
+                System.out.println("INIT Autonomous");
+                dt.setSafetyEnabled(false);
+                startTime = Timer.getFPGATimestamp();
+                thrower.initThrower();
+                thrower.setThrowSpeed(1.0);
+                thrower.setThrowArc(Constants.THROWER_NOMINAL_ARC);
+                statusCount++;
+            case 1 :
+                System.out.println("Looking");
+                light.set(true);
+                if (Timer.getFPGATimestamp() < startTime + 1) {
+                    if (vision.hot()) {
+                        hotCounter ++;
+                    } else {
+                        hotCounter --;
+                    }
+                } else {
+                    light.set(false);
+                    vision.close();
+                    statusCount++;
+                }
+            case 2 :
+                System.out.println("Moving");
+                if (Timer.getFPGATimestamp() < startTime + 4) {
+                   driveSpeed = -0.7;
+                } else {
+                   driveSpeed = 0.0;
+                    statusCount++;
+                }
+            case 3 :
+                if (hotCounter > 0) {
+                    System.out.println("Shooting");
+                    statusCount++;
+                } else if (Timer.getFPGATimestamp() < startTime + 6) {
+                    System.out.println("Shooting");
+                    statusCount++;
+                }
+            case 4 :
+                thrower.startThrow();
+                statusCount++;
+            case 5 :
+                if (thrower.getStatus() == Constants.THROWER_STATUS_HOME) {
+                    statusCount = 99;
+                }
+            // Thrower must be updated every loop
         thrower.update();
         dt.arcadeDrive(driveSpeed, 0);
+        }
     }
     
 }

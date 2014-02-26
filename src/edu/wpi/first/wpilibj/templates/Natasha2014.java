@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.SimpleRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.camera.AxisCamera;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Natasha2014 extends SimpleRobot {
@@ -29,8 +30,9 @@ public class Natasha2014 extends SimpleRobot {
     Solenoid leftLight = new Solenoid(1);
     Solenoid rightLight = new Solenoid(2);
     Solenoid centerLight = new Solenoid(3);
-    Auto auto = new Auto(thrower, dt, ds, centerLight);
-    Vision vision = new Vision();
+    AxisCamera camera;
+    Vision vision = new Vision(camera);
+    Auto auto = new Auto(thrower, dt, ds, centerLight, vision);
 
     /** 
      * Robot Initialization upon boot
@@ -42,6 +44,8 @@ public class Natasha2014 extends SimpleRobot {
 
         thrower.setStowSpeed(-0.35);
         thrower.initThrower();
+
+        vision.init();
     }
 
     /**
@@ -49,8 +53,8 @@ public class Natasha2014 extends SimpleRobot {
      */
     public void autonomous() {
         dt.setSafetyEnabled(false);
-        auto.status = Constants.AUTO_STATUS_INIT;
-        while (auto.status != Constants.AUTO_STATUS_DONE) {
+        auto.statusCount = 0;
+        while (auto.statusCount != 99) {
             auto.updateAuto();
             Timer.delay(Constants.TELEOP_LOOP_DELAY_SECS);
         }
@@ -187,11 +191,11 @@ public class Natasha2014 extends SimpleRobot {
      * This function is called once each time the robot enters test mode.
      */
     public void test() {
-        vision.init();
+        //vision.init();
         centerLight.set(true);
         Timer.delay(1.5);
         while (!leftstick.getRawButton(6)) {
-            System.out.print(Timer.getFPGATimestamp());
+            System.out.print("Time: " + Timer.getFPGATimestamp());
             System.out.println(vision.hot());
             Timer.delay(Constants.TELEOP_LOOP_DELAY_SECS);
         }

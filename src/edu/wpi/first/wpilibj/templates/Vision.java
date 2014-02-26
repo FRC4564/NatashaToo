@@ -72,6 +72,11 @@ public class Vision {
 		double verticalScore;
 
     };
+    
+    public Vision(AxisCamera cam) {
+        camera = cam;
+    }
+    
     public void init() {
         camera = AxisCamera.getInstance();  // get an instance of the camera
         cc = new CriteriaCollection();      // create the criteria for the particle filter
@@ -95,7 +100,7 @@ public class Vision {
              * level directory in the flash memory on the cRIO. The file name in this case is "testImage.jpg"
              * 
              */
-            System.out.println("---Get image");
+            System.out.println(" Got image");
             image = camera.getImage();     // comment if using stored images
             //ColorImage image;                           // next 2 lines read image from flash on cRIO
             //image = new RGBImage("/testImage.jpg");		// get the sample image from the cRIO flash
@@ -124,16 +129,16 @@ public class Vision {
 
                     //Check if the particle is a horizontal target, if not, check if it's a vertical target
                     if (scoreCompare(scores[i], false)) {
-                        System.out.println("particle: " + i + "is a Horizontal Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                        //System.out.println("particle: " + i + "is a Horizontal Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
                         horizontalTargets[horizontalTargetCount++] = i; //Add particle to target array and increment count
                     } else if (scoreCompare(scores[i], true)) {
-                        System.out.println("particle: " + i + "is a Vertical Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                        //System.out.println("particle: " + i + "is a Vertical Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
                         verticalTargets[verticalTargetCount++] = i;  //Add particle to target array and increment count
                     } else {
-                        System.out.println("particle: " + i + "is not a Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
+                        //System.out.println("particle: " + i + "is not a Target centerX: " + report.center_mass_x + "centerY: " + report.center_mass_y);
                     }
-                        System.out.println("rect: " + scores[i].rectangularity + "ARHoriz: " + scores[i].aspectRatioHorizontal);
-                        System.out.println("ARVert: " + scores[i].aspectRatioVertical);	
+                        //System.out.println("rect: " + scores[i].rectangularity + "ARHoriz: " + scores[i].aspectRatioHorizontal);
+                        //System.out.println("ARVert: " + scores[i].aspectRatioVertical);	
                     }
 
                     //Zero out scores and set verticalIndex to first target in case there are no horizontal targets
