@@ -29,6 +29,7 @@ public class Throweraterenator {
     private double brakeSpeed = -0.2;
     private int status = 0;
     private int arc = 0;
+    private int prevCount;
     //private double brakeTime = 0;
     private boolean brake = false;  //when brake is on, stowing is held off
     private boolean inRange = false; //True if target distance is in shooting range
@@ -168,10 +169,12 @@ public class Throweraterenator {
         }
     }
     
+
     /** Based on thrower status and position, move thrower.
      *  Call this routine on a regular basis to service the thrower.
      */
     public void update() {
+        prevCount = position();
         if (status == Constants.THROWER_STATUS_INIT) {
             updateInit();
         } else if (status == Constants.THROWER_STATUS_THROW) {
@@ -181,7 +184,11 @@ public class Throweraterenator {
         } else {
             updateStow();
         }
-
+        if (status == Constants.THROWER_STATUS_THROW) {
+            if (prevCount == position()) {
+                status = Constants.THROWER_STATUS_STOW;
+            }
+        }
     }
 
     

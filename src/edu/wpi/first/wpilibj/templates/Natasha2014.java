@@ -58,6 +58,7 @@ public class Natasha2014 extends SimpleRobot {
             auto.updateAuto();
             Timer.delay(Constants.TELEOP_LOOP_DELAY_SECS);
         }
+        System.out.println("DONE!");
     }
 
 
