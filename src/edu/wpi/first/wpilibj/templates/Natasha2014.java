@@ -71,11 +71,11 @@ public class Natasha2014 extends SimpleRobot {
         while(isOperatorControl() && isEnabled()){
             
             // DRIVETRAIN
-            if (Math.abs(leftstick.getX()) < .1 &&
-                Math.abs(leftstick.getY()) < .1) {
-            dt.arcadeDrive(rightstick.getY() * 1, rightstick.getX() * .7);
+            if (Math.abs(rightstick.getX()) < .1 &&
+                Math.abs(rightstick.getY()) < .1) {
+            dt.arcadeDrive(leftstick.getY() * 1, leftstick.getX() * .7);
             } else {
-            dt.arcadeDrive(leftstick.getY() * -1, leftstick.getX() * .7);
+            dt.arcadeDrive(rightstick.getY() * -1, rightstick.getX() * .7);
             }
             
             // THROWER
@@ -100,12 +100,12 @@ public class Natasha2014 extends SimpleRobot {
                 // Manual throw - no sonar
                 } else if (rightstick.getRawButton(Constants.JB_THROW_MANUAL) ){
                     thrower.setThrowSpeed(1.0);
-                    thrower.setThrowArc(125);
+                    thrower.setThrowArc(86);
                     thrower.startThrow();
                 // Use Analog parameters
                 } else if (rightstick.getRawButton(Constants.JB_THROW_ANALOG) ){
                    thrower.setThrowSpeed(ds.getAnalogIn(1)/5);
-                   thrower.setThrowArc((int)(ds.getAnalogIn(2)/5 * 160));
+                   thrower.setThrowArc((int)(ds.getAnalogIn(2)/5 * 200));
                    thrower.startThrow();
                 }
             }
@@ -171,10 +171,11 @@ public class Natasha2014 extends SimpleRobot {
             SmartDashboard.putNumber("Encoder",thrower.position() );
             SmartDashboard.putNumber("Tail Status (1=extened 2=retracted)", tail.getStatus());
             SmartDashboard.putNumber("Tail Position", tail.getTheta());            
+            SmartDashboard.putNumber("Slider Arc", ds.getAnalogIn(2)/5 * 200);
+            SmartDashboard.putNumber("Slider Speed", ds.getAnalogIn(1)/5);
             SmartDashboard.putNumber("Target Arc", thrower.getThrowArc());
             SmartDashboard.putBoolean("In Range",thrower.inRange());
             
-            SmartDashboard.putNumber("Encoder",thrower.position() );
             //System.out.println(", arc: " + thrower.getThrowArc() );
             /*System.out.print(" sonar: " + sonar.getDistance() );
             //System.out.println(" status: " + thrower.getStatus() );
@@ -193,11 +194,12 @@ public class Natasha2014 extends SimpleRobot {
      */
     public void test() {
         //vision.init();
-        centerLight.set(true);
-        Timer.delay(1.5);
+        //centerLight.set(true);
+        //Timer.delay(1.5);
         while (!leftstick.getRawButton(6)) {
-            System.out.print("Time: " + Timer.getFPGATimestamp());
-            System.out.println(vision.hot());
+            //System.out.print("Time: " + Timer.getFPGATimestamp());
+            //System.out.println(vision.hot());
+            System.out.println(thrower.interpolate(86, 125, 1.5, 4, ds.getAnalogIn(1)));
             Timer.delay(Constants.TELEOP_LOOP_DELAY_SECS);
         }
         

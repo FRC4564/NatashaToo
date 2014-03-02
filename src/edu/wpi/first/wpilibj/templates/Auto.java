@@ -93,16 +93,17 @@ public class Auto {
         System.out.print("Time: " + Timer.getFPGATimestamp() + " ");
 
         switch (statusCount) {
-            case 0 :
+            case 0 :  // Initialize
                 System.out.println("INIT Autonomous");
-                dt.setSafetyEnabled(false);
+                dt.setSafetyEnabled(true);
                 startTime = Timer.getFPGATimestamp();
                 thrower.initThrower();
                 thrower.setThrowSpeed(1.0);
                 thrower.setThrowArc(Constants.THROWER_NOMINAL_ARC);
+                hotCounter = 0;
                 statusCount++;
                 break;
-            case 1 :
+            case 1 :  // Watch for Hot
                 System.out.println("Looking");
                 light.set(true);
                 if (Timer.getFPGATimestamp() < startTime + 1) {
@@ -110,7 +111,7 @@ public class Auto {
                         System.out.println("Hot");
                         hotCounter ++;
                     } else {
-                        System.out.println("Not");
+                        System.out.println("Cold");
                         hotCounter --;
                     }
                 } else {
@@ -120,7 +121,7 @@ public class Auto {
                     statusCount++;
                 }
                 break;
-            case 2 :
+            case 2 :  //Approach goal
                 System.out.println("Moving");
                 if (Timer.getFPGATimestamp() < startTime + 4) {
                    driveSpeed = -0.7;
@@ -129,20 +130,20 @@ public class Auto {
                     statusCount++;
                 }
                 break;
-            case 3 :
+            case 3 :  // Hot or Cold decision
                 if (hotCounter > 0) {
                     System.out.println("Shooting");
                     statusCount++;
-                } else if (Timer.getFPGATimestamp() < startTime + 6) {
+                } else if (Timer.getFPGATimestamp() > startTime + 6) {
                     System.out.println("Waited. . . Shooting");
                     statusCount++;
                 }
                 break;
-            case 4 :
+            case 4 :  // Start throw
                 thrower.startThrow();
                 statusCount++;
                 break;
-            case 5 :
+            case 5 :  // Wait for thrower arm to home
                 if (thrower.getStatus() == Constants.THROWER_STATUS_HOME) {
                     statusCount = 99;
                 }
