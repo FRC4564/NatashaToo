@@ -68,15 +68,15 @@ public class Natasha2014 extends SimpleRobot {
     public void operatorControl() {
         System.out.println("Teleop...");
         dt.setSafetyEnabled(true);
-        while(isOperatorControl() && isEnabled()){
+        while (isOperatorControl() && isEnabled()) {
             
             // DRIVETRAIN
             if (Math.abs(rightstick.getX()) < .1 &&
                 Math.abs(rightstick.getY()) < .1) {
-            dt.arcadeDrive(leftstick.getY() * 1, leftstick.getX() * .7);
+                dt.arcadeDrive(leftstick.getY() * 1, leftstick.getX() * .7);
             } else {
-            dt.arcadeDrive(rightstick.getY() * -1, rightstick.getX() * .7);
-            }
+                dt.arcadeDrive(rightstick.getY() * -1, rightstick.getX() * .7);            }
+
             
             // THROWER
             // Set thrower range based on current sonar reading
@@ -175,6 +175,8 @@ public class Natasha2014 extends SimpleRobot {
             SmartDashboard.putNumber("Slider Speed", ds.getAnalogIn(1)/5);
             SmartDashboard.putNumber("Target Arc", thrower.getThrowArc());
             SmartDashboard.putBoolean("In Range",thrower.inRange());
+            SmartDashboard.putNumber("Distance" , sonar.getDistance());
+            SmartDashboard.putNumber("Turn Offset", -((ds.getAnalogIn(3) - 2.5) * (0.08)));
             
             //System.out.println(", arc: " + thrower.getThrowArc() );
             /*System.out.print(" sonar: " + sonar.getDistance() );

@@ -9,6 +9,7 @@ package edu.wpi.first.wpilibj.templates;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 
@@ -22,6 +23,8 @@ public class Throweraterenator {
     
     private Encoder encoder = new Encoder(Constants.DIO_THROWER_ENCODER_A, 
             Constants.DIO_THROWER_ENCODER_B, false, EncodingType.k1X);
+    
+    DriverStation ds = DriverStation.getInstance();
      
     private double motorsSpeed = 0; // Current thrower motors speed
     private double throwSpeed = 0;
@@ -29,7 +32,7 @@ public class Throweraterenator {
     private double brakeSpeed = -0.2;
     private int status = 0;
     private int arc = 0;
-    private int prevCount;
+    private int prevCount = 0;
     //private double brakeTime = 0;
     private boolean brake = false;  //when brake is on, stowing is held off
     private boolean inRange = false; //True if target distance is in shooting range
@@ -169,18 +172,22 @@ public class Throweraterenator {
         }
     }
     
+    public void startFree() {
+        status = Constants.THROWER_STATUS_FREE;
+    }
 
     /** Based on thrower status and position, move thrower.
      *  Call this routine on a regular basis to service the thrower.
      */
     public void update() {
-        prevCount = position();
         if (status == Constants.THROWER_STATUS_INIT) {
             updateInit();
         } else if (status == Constants.THROWER_STATUS_THROW) {
             updateThrow();
         } else if (status == Constants.THROWER_STATUS_BRAKE) {
             updatebrake();
+        } else if (!ds.getDigitalIn(1)) {
+            setMotors(0);
         } else {
             updateStow();
         }
@@ -189,6 +196,8 @@ public class Throweraterenator {
                 status = Constants.THROWER_STATUS_STOW;
             }
         }
+        prevCount = position();
+
     }
 
     

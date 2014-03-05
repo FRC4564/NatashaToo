@@ -151,7 +151,7 @@ public class Auto {
         }
         // Thrower must be updated every loop
         thrower.update();
-        dt.arcadeDrive(driveSpeed, 0);
+        dt.arcadeDrive(driveSpeed, -((ds.getAnalogIn(3) - 2.5) * (0.08)));
         
     }
     
