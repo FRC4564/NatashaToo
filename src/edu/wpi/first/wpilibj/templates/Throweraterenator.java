@@ -294,9 +294,9 @@ public class Throweraterenator {
      * @param distance decimal feet to target
      */
     public void setTargetDistance(double distance) {
-        double distMin = 1.5;
-        double distMax = 8.0;
-        double distInterpolate = 4.0;  // distances below this are interpolated
+        double distMin = 1.5;           //min distance considered 'in range'
+        double distMax = 8.0;           //max distance considered 'in range'
+        double distInterpolate = 4.0;   // distances below this use interpolation
         int arcMin = 86;
         int arcMax = Constants.THROWER_NOMINAL_ARC;
         int speedMin = 1;
@@ -304,19 +304,21 @@ public class Throweraterenator {
         int arcCalc = 0;
         double speedCalc = 0;
         
-        speedCalc = interpolate(speedMin, speedMax, distMin, distMax, distance);
-        setThrowSpeed(speedCalc);      
         
         if (distance >= distMin && distance <= distInterpolate) { // Valid distance
             arcCalc = (int)interpolate(arcMin, arcMax, distMin, distInterpolate, distance);
             setThrowArc(arcCalc);
+            speedCalc = interpolate(speedMin, speedMax, distMin, distMax, distance);
+            setThrowSpeed(speedCalc);      
             inRange =  true;
         } else if (distance > distInterpolate && distance <= distMax) {
             arcCalc = arcMax;
             setThrowArc(arcCalc);
+            setThrowSpeed(speedMax);
             inRange =  true;
         } else {
-            arcCalc = arcMax;
+            setThrowArc(arcMax);
+            setThrowSpeed(speedMax);
             inRange = false;
         }
     }

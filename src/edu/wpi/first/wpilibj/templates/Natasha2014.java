@@ -73,9 +73,9 @@ public class Natasha2014 extends SimpleRobot {
             // DRIVETRAIN
             if (Math.abs(rightstick.getX()) < .1 &&
                 Math.abs(rightstick.getY()) < .1) {
-                dt.arcadeDrive(leftstick.getY() * 1, leftstick.getX() * .7);
+                dt.arcadeDrive(leftstick.getY() * -1, leftstick.getX() * .7);
             } else {
-                dt.arcadeDrive(rightstick.getY() * -1, rightstick.getX() * .7);            }
+                dt.arcadeDrive(rightstick.getY() * 1, rightstick.getX() * .7);            }
 
             
             // THROWER
@@ -100,7 +100,7 @@ public class Natasha2014 extends SimpleRobot {
                 // Manual throw - no sonar
                 } else if (rightstick.getRawButton(Constants.JB_THROW_MANUAL) ){
                     thrower.setThrowSpeed(1.0);
-                    thrower.setThrowArc(86);
+                    thrower.setThrowArc(Constants.THROWER_NOMINAL_ARC);
                     thrower.startThrow();
                 // Use Analog parameters
                 } else if (rightstick.getRawButton(Constants.JB_THROW_ANALOG) ){
@@ -109,7 +109,7 @@ public class Natasha2014 extends SimpleRobot {
                    thrower.startThrow();
                 }
             }
-                // Catch ball by braking at 90 arc while button is held
+                // Catch ball by braking at 110 arc while button is held
             if (leftstick.getRawButton(Constants.JB_THROW_CATCH)) {
                 thrower.setThrowSpeed(0.3);
                 thrower.setThrowArc(110);
