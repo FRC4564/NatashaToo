@@ -25,7 +25,10 @@ public class Throweraterenator {
             Constants.DIO_THROWER_ENCODER_B, false, EncodingType.k1X);
     
     DriverStation ds = DriverStation.getInstance();
-     
+
+    public final double distMin = 1.5;           //min distance considered 'in range'
+    public final double distMax = 8.0;           //max distance considered 'in range'
+
     private double motorsSpeed = 0; // Current thrower motors speed
     private double throwSpeed = 0;
     private double stowSpeed = 0;
@@ -191,13 +194,13 @@ public class Throweraterenator {
         } else {
             updateStow();
         }
-        if (status == Constants.THROWER_STATUS_THROW) {
+        /*if (status == Constants.THROWER_STATUS_THROW) {
             if (prevCount == position()) {
                 status = Constants.THROWER_STATUS_STOW;
-            }
-        }
+            }  
+        } 
         prevCount = position();
-
+        */
     }
 
     
@@ -283,9 +286,13 @@ public class Throweraterenator {
 
 
     
-    public boolean inRange(){
-        return inRange;
-    }
+    public boolean inRange(double distance){
+        if (distance >= distMin && distance <= distMax) {
+            return true; 
+        } else {
+            return false;
+        }
+    }    
     
     /** Sets speed and arc parameters given target distance in feet.
      *  If the distance is out of throwing range then
@@ -294,9 +301,7 @@ public class Throweraterenator {
      * @param distance decimal feet to target
      */
     public void setTargetDistance(double distance) {
-        double distMin = 1.5;           //min distance considered 'in range'
-        double distMax = 8.0;           //max distance considered 'in range'
-        double distInterpolate = 4.0;   // distances below this use interpolation
+        double distInterpolate = 5.0;   // distances below this use interpolation
         int arcMin = 86;
         int arcMax = Constants.THROWER_NOMINAL_ARC;
         int speedMin = 1;

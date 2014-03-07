@@ -79,13 +79,13 @@ public class Natasha2014 extends SimpleRobot {
 
             
             // THROWER
-            // Set thrower range based on current sonar reading
-            thrower.setTargetDistance(sonar.getDistance());
             // A throw tail be home and Throw Safety button be pressed.
             if (tail.getStatus() == Constants.TAIL_STATUS_RETRACTED &&
                 rightstick.getRawButton(Constants.JB_THROW_SAFETY) ) {
                 // Auto ranged throw
                 if (rightstick.getRawButton(Constants.JB_THROW_AUTO_DIST) ) {
+                    // Set thrower range based on current sonar reading
+                    thrower.setTargetDistance(sonar.getDistance());
                     thrower.startThrow();
                 // Truss toss
                 } else if (rightstick.getRawButton(Constants.JB_THROW_TRUSS_TOSS) ){
@@ -136,7 +136,7 @@ public class Natasha2014 extends SimpleRobot {
              sonar.update();
              
             // LIGHTS
-            if (thrower.inRange() ) {
+            if (thrower.inRange(sonar.getDistance()) ) {
                 if (sonar.getBalance() == Constants.SONIC_BALANCE_LEFT
                     || sonar.getBalance() == Constants.SONIC_BALANCE_EQUAL) {
                     leftLight.set(true);
@@ -174,7 +174,7 @@ public class Natasha2014 extends SimpleRobot {
             SmartDashboard.putNumber("Slider Arc", ds.getAnalogIn(2)/5 * 200);
             SmartDashboard.putNumber("Slider Speed", ds.getAnalogIn(1)/5);
             SmartDashboard.putNumber("Target Arc", thrower.getThrowArc());
-            SmartDashboard.putBoolean("In Range",thrower.inRange());
+            SmartDashboard.putBoolean("In Range",thrower.inRange(sonar.getDistance()));
             SmartDashboard.putNumber("Distance" , sonar.getDistance());
             SmartDashboard.putNumber("Turn Offset", -((ds.getAnalogIn(3) - 2.5) * (0.08)));
             
