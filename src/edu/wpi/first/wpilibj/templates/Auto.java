@@ -97,9 +97,9 @@ public class Auto {
                 System.out.println("INIT Autonomous");
                 dt.setSafetyEnabled(true);
                 startTime = Timer.getFPGATimestamp();
-                thrower.initThrower();
+                //thrower.initThrower();
                 thrower.setThrowSpeed(1.0);
-                thrower.setThrowArc(Constants.THROWER_NOMINAL_ARC);
+                thrower.setThrowArc(128);
                 hotCounter = 0;
                 statusCount++;
                 break;
@@ -123,7 +123,7 @@ public class Auto {
                 break;
             case 2 :  //Approach goal
                 System.out.println("Moving");
-                if (Timer.getFPGATimestamp() < startTime + 4) {
+                if (Timer.getFPGATimestamp() < startTime + 4.38) {
                    driveSpeed = -0.7;
                 } else {
                    driveSpeed = 0.0;
@@ -151,7 +151,7 @@ public class Auto {
         }
         // Thrower must be updated every loop
         thrower.update();
-        dt.arcadeDrive(driveSpeed, (ds.getAnalogIn(3) / 5 * 0.2));
+        dt.arcadeDrive(driveSpeed, .05);
         
     }
     

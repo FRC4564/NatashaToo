@@ -26,7 +26,7 @@ public class Throweraterenator {
     
     DriverStation ds = DriverStation.getInstance();
 
-    public final double distMin = 1.5;           //min distance considered 'in range'
+    public final double distMin = 3.0;           //min distance considered 'in range'
     public final double distMax = 8.0;           //max distance considered 'in range'
 
     private double motorsSpeed = 0; // Current thrower motors speed
@@ -36,6 +36,7 @@ public class Throweraterenator {
     private int status = 0;
     private int arc = 0;
     private int prevCount = 0;
+    private double stopTime;
     //private double brakeTime = 0;
     private boolean brake = false;  //when brake is on, stowing is held off
     private boolean inRange = false; //True if target distance is in shooting range
@@ -170,6 +171,8 @@ public class Throweraterenator {
     public void startThrow() {
         if (status == Constants.THROWER_STATUS_HOME) {
              status = Constants.THROWER_STATUS_THROW;
+             //Time that the thrower has to stop at if throw isn't completed
+             stopTime = Timer.getFPGATimestamp() + .3;
              //trace.start();
              //trace.add(position(), getThrowArc(), getStatus());
         }
@@ -194,13 +197,6 @@ public class Throweraterenator {
         } else {
             updateStow();
         }
-        /*if (status == Constants.THROWER_STATUS_THROW) {
-            if (prevCount == position()) {
-                status = Constants.THROWER_STATUS_STOW;
-            }  
-        } 
-        prevCount = position();
-        */
     }
 
     
@@ -254,8 +250,8 @@ public class Throweraterenator {
      * The timerTask is also watching for target arc, and stopping throw.
      */
     private void updateThrow() {
-        System.out.println("Throwing: " + position());
-        if (position() < arc) {
+        //System.out.println("Throwing: " + position());
+        if (position() < arc && Timer.getFPGATimestamp() < stopTime) {
             setMotors(throwSpeed);
         } else {
             setMotors(0);

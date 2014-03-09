@@ -176,7 +176,7 @@ public class Natasha2014 extends SimpleRobot {
             SmartDashboard.putNumber("Target Arc", thrower.getThrowArc());
             SmartDashboard.putBoolean("In Range",thrower.inRange(sonar.getDistance()));
             SmartDashboard.putNumber("Distance" , sonar.getDistance());
-            SmartDashboard.putNumber("Turn Offset", -((ds.getAnalogIn(3) - 2.5) * (0.08)));
+            SmartDashboard.putNumber("Turn Offset", (ds.getAnalogIn(3) / 5 * 0.2));
             
             //System.out.println(", arc: " + thrower.getThrowArc() );
             /*System.out.print(" sonar: " + sonar.getDistance() );
