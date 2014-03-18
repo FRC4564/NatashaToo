@@ -73,9 +73,9 @@ public class Natasha2014 extends SimpleRobot {
             // DRIVETRAIN
             if (Math.abs(rightstick.getX()) < .1 &&
                 Math.abs(rightstick.getY()) < .1) {
-                dt.arcadeDrive(leftstick.getY() * -1, leftstick.getX() * .7);
+                dt.arcadeDrive(leftstick.getY() * -1, leftstick.getX() * .9);
             } else {
-                dt.arcadeDrive(rightstick.getY() * 1, rightstick.getX() * .7);            }
+                dt.arcadeDrive(rightstick.getY() * 1, rightstick.getX() * .9);            }
 
             
             // THROWER

@@ -106,7 +106,7 @@ public class Auto {
             case 1 :  // Watch for Hot
                 System.out.println("Looking");
                 light.set(true);
-                if (Timer.getFPGATimestamp() < startTime + 1) {
+                if (Timer.getFPGATimestamp() < startTime + 1.0) {
                     if (vision.hot()) {
                         System.out.println("Hot");
                         hotCounter ++;
@@ -123,7 +123,7 @@ public class Auto {
                 break;
             case 2 :  //Approach goal
                 System.out.println("Moving");
-                if (Timer.getFPGATimestamp() < startTime + 4.38) {
+                if (Timer.getFPGATimestamp() < startTime + 4.45) {
                    driveSpeed = -0.7;
                 } else {
                    driveSpeed = 0.0;
@@ -151,7 +151,7 @@ public class Auto {
         }
         // Thrower must be updated every loop
         thrower.update();
-        dt.arcadeDrive(driveSpeed, .05);
+        dt.arcadeDrive(driveSpeed, .04);
         
     }
     

@@ -21,15 +21,15 @@ public class Tail {
     private double baseSpeed;
     // potentiometer values
     private double volts = 0;
-    private double voltsMin = 1.94;             // Minimum pot reading
-    private double voltsMax = 3.47;             // Maximum pot reading
+    private double voltsMin = 1.89;             // Minimum pot reading
+    private double voltsMax = 3.37;             // Maximum pot reading
     private double voltsExtended = voltsMax - 0.03;  // safe extend
     private double voltsRetracted = voltsMin + 0.02; // safe retract
     // stinger motor rotation varies by mode and tail position
     //private double voltsEjectStinger = voltsRetracted * 1.10; // stinger eject start 
     //private double voltsStingerStart = voltsRetracted * 1.40; // stinger pickup start
     private double extendBeginEject = voltsRetracted + 0.1;    
-    private double extendBeginPickup = voltsRetracted + 0.9;    
+    private double extendBeginPickup = voltsRetracted + 1.0;    
     private double retractBeginPickup = voltsRetracted + 0.56;   
     // tail base motor speeds at end points and direction
     private double beginRetractSpeed = -0.75;
