@@ -20,6 +20,7 @@ public class Natasha2014 extends SimpleRobot {
     
     Joystick leftstick = new Joystick(1);
     Joystick rightstick = new Joystick(2);
+    double turnPercent = .9;
     DriveTrain dt = new DriveTrain(Constants.frontLeft, Constants.rearLeft,
                                    Constants.frontRight, Constants.rearRight);
     Throweraterenator thrower = new Throweraterenator();
@@ -71,11 +72,17 @@ public class Natasha2014 extends SimpleRobot {
         while (isOperatorControl() && isEnabled()) {
             
             // DRIVETRAIN
+            if (tail.getStatus() == Constants.TAIL_STATUS_EXTENDED) {
+                turnPercent = .9 * .75;
+            } else {
+                turnPercent = .9;
+            }
+            
             if (Math.abs(rightstick.getX()) < .1 &&
                 Math.abs(rightstick.getY()) < .1) {
-                dt.arcadeDrive(leftstick.getY() * -1, leftstick.getX() * .9);
+                dt.arcadeDrive(leftstick.getY() * -1, leftstick.getX() * turnPercent);
             } else {
-                dt.arcadeDrive(rightstick.getY() * 1, rightstick.getX() * .9);            }
+                dt.arcadeDrive(rightstick.getY() * 1, rightstick.getX() * turnPercent);            }
 
             
             // THROWER

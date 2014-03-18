@@ -30,7 +30,8 @@ public class Tail {
     //private double voltsStingerStart = voltsRetracted * 1.40; // stinger pickup start
     private double extendBeginEject = voltsRetracted + 0.1;    
     private double extendBeginPickup = voltsRetracted + 1.0;    
-    private double retractBeginPickup = voltsRetracted + 0.56;   
+    private double retractBeginPickup = voltsRetracted + 0.56;  
+    private double retractKickback = voltsRetracted + 0.05;
     // tail base motor speeds at end points and direction
     private double beginRetractSpeed = -0.75;
     private double endRetractSpeed = 0.15;
@@ -122,6 +123,9 @@ public class Tail {
                 status = Constants.TAIL_STATUS_EXTENDED;
                 setBaseSpeed(0);
             }
+        } else if (status == Constants.TAIL_STATUS_RETRACTED
+                && volts >= retractKickback) {
+            setBaseSpeed(-0.3);
         } else {
             setBaseSpeed(0);
         }
