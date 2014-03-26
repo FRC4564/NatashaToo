@@ -106,7 +106,7 @@ public class Auto {
             case 1 :  // Watch for Hot
                 System.out.println("Looking");
                 light.set(true);
-                if (Timer.getFPGATimestamp() < startTime + 1.0) {
+                if (Timer.getFPGATimestamp() < startTime + 0.9) {
                     if (vision.hot()) {
                         System.out.println("Hot");
                         hotCounter ++;
@@ -134,7 +134,7 @@ public class Auto {
                 if (hotCounter > 0) {
                     System.out.println("Shooting");
                     statusCount++;
-                } else if (Timer.getFPGATimestamp() > startTime + 6) {
+                } else if (Timer.getFPGATimestamp() > startTime + 7) {
                     System.out.println("Waited. . . Shooting");
                     statusCount++;
                 }

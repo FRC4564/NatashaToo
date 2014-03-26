@@ -8,6 +8,7 @@ package edu.wpi.first.wpilibj.templates;
 
 import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  *
@@ -19,6 +20,7 @@ public class Tail {
     private double theta;
     private double stingerSpeed;
     private double baseSpeed;
+    private double extendTime;
     // potentiometer values
     private double volts = 0;
     private double voltsMin = 1.89;             // Minimum pot reading
@@ -94,6 +96,7 @@ public class Tail {
      */
     public void startExtend() {
         status = Constants.TAIL_STATUS_EXTENDING;
+        extendTime = Timer.getFPGATimestamp();
     }
 
     /**
@@ -174,6 +177,10 @@ public class Tail {
         double m = (endExtendSpeed - beginExtendSpeed) / (voltsExtended - voltsRetracted);
         setBaseSpeed(m * (getTheta() - voltsExtended) + endExtendSpeed);
         if (getTheta() >= voltsExtended) {
+            setBaseSpeed(0);
+            status = Constants.TAIL_STATUS_EXTENDED;
+        }
+        if (Timer.getFPGATimestamp() > extendTime + 0.7) {
             setBaseSpeed(0);
             status = Constants.TAIL_STATUS_EXTENDED;
         }

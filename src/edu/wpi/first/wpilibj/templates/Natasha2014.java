@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.camera.AxisCamera;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Natasha2014 extends SimpleRobot {
     
@@ -31,6 +32,7 @@ public class Natasha2014 extends SimpleRobot {
     Solenoid leftLight = new Solenoid(1);
     Solenoid rightLight = new Solenoid(2);
     Solenoid centerLight = new Solenoid(3);
+    DigitalInput ballDetect = new DigitalInput(Constants.DIO_TAIL_BALL_DETECT);
     AxisCamera camera;
     Vision vision = new Vision(camera);
     Auto auto = new Auto(thrower, dt, ds, centerLight, vision);
@@ -46,7 +48,7 @@ public class Natasha2014 extends SimpleRobot {
         thrower.setStowSpeed(-0.35);
         thrower.initThrower();
 
-        vision.init();
+//***********************THIS NEEDS TO BE REENABLED        vision.init();
     }
 
     /**
@@ -80,10 +82,10 @@ public class Natasha2014 extends SimpleRobot {
             
             if (Math.abs(rightstick.getX()) < .1 &&
                 Math.abs(rightstick.getY()) < .1) {
-                dt.arcadeDrive(leftstick.getY() * -1, leftstick.getX() * turnPercent);
+                dt.arcadeDrive(dt.accelCurve(leftstick) * -1, leftstick.getX() * turnPercent);
             } else {
-                dt.arcadeDrive(rightstick.getY() * 1, rightstick.getX() * turnPercent);            }
-
+                dt.arcadeDrive(dt.accelCurve(rightstick) * 1, rightstick.getX() * turnPercent);            }
+            
             
             // THROWER
             // A throw tail be home and Throw Safety button be pressed.
@@ -129,11 +131,15 @@ public class Natasha2014 extends SimpleRobot {
             thrower.update();
                       
             // SCORPION TAIL
-            if (thrower.getStatus() == Constants.THROWER_STATUS_HOME) {  
+            if (thrower.getStatus() == Constants.THROWER_STATUS_HOME) {
                 if (leftstick.getRawButton(Constants.JB_TAIL_EXTEND) ) {
                     tail.startExtend();
                 }
-                if (leftstick.getRawButton(Constants.JB_TAIL_RETRACT) ) {
+                if (leftstick.getRawButton(Constants.JB_TAIL_RETRACT)) {
+                    tail.startRetract();
+                }
+                if (!ballDetect.get()
+                    && tail.getStatus() == Constants.TAIL_STATUS_EXTENDED) {
                     tail.startRetract();
                 }
             }
@@ -187,12 +193,13 @@ public class Natasha2014 extends SimpleRobot {
             
             //System.out.println(", arc: " + thrower.getThrowArc() );
             /*System.out.print(" sonar: " + sonar.getDistance() );
-            //System.out.println(" status: " + thrower.getStatus() );
+            System.out.println(" status: " + thrower.getStatus() );
             
             System.out.print("L: " + sonar.getLeftDistance());
             System.out.print(", R: " + sonar.getRightDistance());
             System.out.print(", Dist: " + sonar.getDistance());
             System.out.println(", Bal: " + sonar.getBalance());*/
+            System.out.println("DT speed" + dt.speed);
  
             Timer.delay(Constants.TELEOP_LOOP_DELAY_SECS);
         }        

@@ -30,6 +30,7 @@ public class Constants {
     public static final int DIO_THROWER_ENCODER_B = 2;
     public static final int DIO_SONIC_LEFT_ENABLE = 3;
     public static final int DIO_SONIC_RIGHT_ENABLE = 4;
+    public static final int DIO_TAIL_BALL_DETECT = 5;
     
     // Analog Inputs
     public static final int ANA_SONIC_RIGHT = 1;
