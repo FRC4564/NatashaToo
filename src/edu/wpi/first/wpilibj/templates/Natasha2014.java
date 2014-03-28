@@ -213,9 +213,12 @@ public class Natasha2014 extends SimpleRobot {
         //centerLight.set(true);
         //Timer.delay(1.5);
         while (!leftstick.getRawButton(6)) {
-            //System.out.print("Time: " + Timer.getFPGATimestamp());
-            //System.out.println(vision.hot());
-            System.out.println(thrower.interpolate(86, 125, 1.5, 4, ds.getAnalogIn(1)));
+            if (leftstick.getRawButton(1)) {
+                tail.setBaseSpeed(.05);
+            } else {
+                tail.setBaseSpeed(0);
+            }
+            System.out.println(tail.getTheta());
             Timer.delay(Constants.TELEOP_LOOP_DELAY_SECS);
         }
         

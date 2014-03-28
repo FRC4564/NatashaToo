@@ -23,22 +23,22 @@ public class Tail {
     private double extendTime;
     // potentiometer values
     private double volts = 0;
-    private double voltsMin = 1.89;             // Minimum pot reading
-    private double voltsMax = 3.37;             // Maximum pot reading
+    private double voltsMin = 3.28;             // Minimum pot reading
+    private double voltsMax = 4.36;             // Maximum pot reading
     private double voltsExtended = voltsMax - 0.03;  // safe extend
     private double voltsRetracted = voltsMin + 0.02; // safe retract
     // stinger motor rotation varies by mode and tail position
     //private double voltsEjectStinger = voltsRetracted * 1.10; // stinger eject start 
     //private double voltsStingerStart = voltsRetracted * 1.40; // stinger pickup start
     private double extendBeginEject = voltsRetracted + 0.1;    
-    private double extendBeginPickup = voltsRetracted + 1.0;    
+    private double extendBeginPickup = voltsRetracted + 0.8;    
     private double retractBeginPickup = voltsRetracted + 0.56;  
     private double retractKickback = voltsRetracted + 0.05;
     // tail base motor speeds at end points and direction
-    private double beginRetractSpeed = -0.75;
-    private double endRetractSpeed = 0.15;
-    private double beginExtendSpeed = 0.8;
-    private double endExtendSpeed = -0.22;
+    private double beginRetractSpeed = -0.4; //-.75
+    private double endRetractSpeed = -0.15; //.15
+    private double beginExtendSpeed = 0.70; //.8
+    private double endExtendSpeed = 0.0; //-.22
      
     Talon base = new Talon(Constants.PWM_TAIL_BASE);
     Talon stinger = new Talon(Constants.PWM_TAIL_STINGER);
@@ -180,7 +180,7 @@ public class Tail {
             setBaseSpeed(0);
             status = Constants.TAIL_STATUS_EXTENDED;
         }
-        if (Timer.getFPGATimestamp() > extendTime + 0.7) {
+        if (Timer.getFPGATimestamp() > extendTime + 2.0) {
             setBaseSpeed(0);
             status = Constants.TAIL_STATUS_EXTENDED;
         }
