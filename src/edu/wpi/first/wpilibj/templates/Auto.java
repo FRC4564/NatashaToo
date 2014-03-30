@@ -99,7 +99,7 @@ public class Auto {
                 startTime = Timer.getFPGATimestamp();
                 //thrower.initThrower();
                 thrower.setThrowSpeed(1.0);
-                thrower.setThrowArc(128);
+                thrower.setThrowArc(115);
                 hotCounter = 0;
                 statusCount++;
                 break;
@@ -122,20 +122,20 @@ public class Auto {
                 }
                 break;
             case 2 :  //Approach goal
-                System.out.println("Moving");
-                if (Timer.getFPGATimestamp() < startTime + 4.45) {
+                if (Timer.getFPGATimestamp() < startTime + 4.1) {
                    driveSpeed = -0.7;
                 } else {
+                   System.out.println("Stopped Moving");
                    driveSpeed = 0.0;
                     statusCount++;
                 }
                 break;
             case 3 :  // Hot or Cold decision
-                if (hotCounter > 0) {
-                    System.out.println("Shooting");
+                if (hotCounter > 0 && Timer.getFPGATimestamp() > startTime + 4.25) {
+                    System.out.println("Hot...shooting now");
                     statusCount++;
                 } else if (Timer.getFPGATimestamp() > startTime + 7) {
-                    System.out.println("Waited. . . Shooting");
+                    System.out.println("Cold...waited for shot");
                     statusCount++;
                 }
                 break;
@@ -151,7 +151,7 @@ public class Auto {
         }
         // Thrower must be updated every loop
         thrower.update();
-        dt.arcadeDrive(driveSpeed, .04);
+        dt.arcadeDrive(driveSpeed, .04);  //need just a bit of right steer to go straight
         
     }
     

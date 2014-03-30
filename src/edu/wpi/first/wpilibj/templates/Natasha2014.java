@@ -48,7 +48,7 @@ public class Natasha2014 extends SimpleRobot {
         thrower.setStowSpeed(-0.35);
         thrower.initThrower();
 
-//***********************THIS NEEDS TO BE REENABLED        vision.init();
+        vision.init();
     }
 
     /**
@@ -198,8 +198,8 @@ public class Natasha2014 extends SimpleRobot {
             System.out.print("L: " + sonar.getLeftDistance());
             System.out.print(", R: " + sonar.getRightDistance());
             System.out.print(", Dist: " + sonar.getDistance());
-            System.out.println(", Bal: " + sonar.getBalance());*/
-            System.out.println("DT speed" + dt.speed);
+            System.out.println(", Bal: " + sonar.getBalance());
+            System.out.println("DT speed" + dt.speed);*/
  
             Timer.delay(Constants.TELEOP_LOOP_DELAY_SECS);
         }        

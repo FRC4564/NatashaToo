@@ -23,22 +23,22 @@ public class Tail {
     private double extendTime;
     // potentiometer values
     private double volts = 0;
-    private double voltsMin = 3.28;             // Minimum pot reading
-    private double voltsMax = 4.36;             // Maximum pot reading
+    private double voltsMin = 1.89;             // Minimum pot reading 1.89 / 3.28
+    private double voltsMax = 3.21;             // Maximum pot reading 3.37 / 4.36
     private double voltsExtended = voltsMax - 0.03;  // safe extend
     private double voltsRetracted = voltsMin + 0.02; // safe retract
     // stinger motor rotation varies by mode and tail position
     //private double voltsEjectStinger = voltsRetracted * 1.10; // stinger eject start 
     //private double voltsStingerStart = voltsRetracted * 1.40; // stinger pickup start
     private double extendBeginEject = voltsRetracted + 0.1;    
-    private double extendBeginPickup = voltsRetracted + 0.8;    
+    private double extendBeginPickup = voltsRetracted + 1.0; // 1.0 / 0.8    
     private double retractBeginPickup = voltsRetracted + 0.56;  
-    private double retractKickback = voltsRetracted + 0.05;
+    private double retractKickback = voltsRetracted + 0.02;
     // tail base motor speeds at end points and direction
-    private double beginRetractSpeed = -0.4; //-.75
-    private double endRetractSpeed = -0.15; //.15
-    private double beginExtendSpeed = 0.70; //.8
-    private double endExtendSpeed = 0.0; //-.22
+    private double beginRetractSpeed = -0.6; //-0.75 / -0.4
+    private double endRetractSpeed = 0.15; //0.15 / -0.15
+    private double beginExtendSpeed = 0.95; //0.8 / 0.70
+    private double endExtendSpeed = -0.22; //-0.22 / 0.0
      
     Talon base = new Talon(Constants.PWM_TAIL_BASE);
     Talon stinger = new Talon(Constants.PWM_TAIL_STINGER);

@@ -298,7 +298,7 @@ public class Throweraterenator {
      */
     public void setTargetDistance(double distance) {
         double distInterpolate = 5.0;   // distances below this use interpolation
-        int arcMin = 86;
+        int arcMin = 115;
         int arcMax = Constants.THROWER_NOMINAL_ARC;
         int speedMin = 1;
         int speedMax = 1;

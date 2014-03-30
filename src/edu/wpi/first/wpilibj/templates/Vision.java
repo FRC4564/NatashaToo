@@ -100,13 +100,14 @@ public class Vision {
              * level directory in the flash memory on the cRIO. The file name in this case is "testImage.jpg"
              * 
              */
-            System.out.println(" Got image");
+            System.out.println(" Getting image");
             image = camera.getImage();     // comment if using stored images
+            image.write("/CameraImage.bmp");
             //ColorImage image;                           // next 2 lines read image from flash on cRIO
             //image = new RGBImage("/testImage.jpg");		// get the sample image from the cRIO flash
             //System.out.println("---Apply threshold");
             //BinaryImage thresholdImage = image.thresholdHSV(105, 137, 230, 255, 133, 183);   // keep only green objects
-            thresholdImage = image.thresholdHSV(109, 141, 0, 255, 95, 127);   // keep only green objects
+            thresholdImage = image.thresholdHSV(109, 141, 138, 255, 139, 198);   // keep only green objects
             //thresholdImage.write("/threshold.bmp");
             //System.out.println("---Apply particleFilter");
             filteredImage = thresholdImage.particleFilter(cc);           // filter out small particles

@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 public class DriveTrain extends RobotDrive{
     
     double speed = 0;
-    double accel = 0.5;
+    double accel = 0.25;
     
     public DriveTrain(SpeedController frontLeft, SpeedController rearLeft, SpeedController frontRight, SpeedController rearRight) {
         super(frontLeft, rearLeft, frontRight, rearRight);
