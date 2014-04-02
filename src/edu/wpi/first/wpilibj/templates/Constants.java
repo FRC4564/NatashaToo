@@ -81,7 +81,7 @@ public class Constants {
     public static final int THROWER_STATUS_BRAKE = 4;
     public static final int THROWER_STATUS_FREE = 5;
     //Standard arc used for normal throw and autonomous (roughly 4' to 7')
-    public static final int THROWER_NOMINAL_ARC = 148;
+    public static final int THROWER_NOMINAL_ARC = 140;
 
     //Sonic constants
     public static final int SONIC_BALANCE_EQUAL = 0;
