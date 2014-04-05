@@ -27,6 +27,7 @@ public class Auto {
     int status = Constants.AUTO_STATUS_INIT;
     int statusCount = 0;
     double driveSpeed = 0;
+    private boolean pic = false;
     
     public Auto(Throweraterenator thrower, DriveTrain dt, DriverStation ds,
                 Solenoid light, Vision vision) {
@@ -99,9 +100,9 @@ public class Auto {
                 startTime = Timer.getFPGATimestamp();
                 //thrower.initThrower();
                 thrower.setThrowSpeed(1.0);
-                thrower.setThrowArc(115);
+                thrower.setThrowArc(140);
                 hotCounter = 0;
-                statusCount++;
+                statusCount += 2;
                 break;
             case 1 :  // Watch for Hot
                 System.out.println("Looking");
@@ -122,8 +123,13 @@ public class Auto {
                 }
                 break;
             case 2 :  //Approach goal
-                if (Timer.getFPGATimestamp() < startTime + 4.1) {
-                   driveSpeed = -0.7;
+                if (Timer.getFPGATimestamp() < startTime + 3.65) {
+                   driveSpeed = -0.82;
+                   if (Timer.getFPGATimestamp() < startTime + 2.2
+                       && !pic) {
+                       vision.hot();
+                       pic = true;
+                   }
                 } else {
                    System.out.println("Stopped Moving");
                    driveSpeed = 0.0;
@@ -131,7 +137,7 @@ public class Auto {
                 }
                 break;
             case 3 :  // Hot or Cold decision
-                if (hotCounter > 0 && Timer.getFPGATimestamp() > startTime + 4.25) {
+                if (hotCounter > 0 && Timer.getFPGATimestamp() > startTime + 4.0) {
                     System.out.println("Hot...shooting now");
                     statusCount++;
                 } else if (Timer.getFPGATimestamp() > startTime + 7) {
