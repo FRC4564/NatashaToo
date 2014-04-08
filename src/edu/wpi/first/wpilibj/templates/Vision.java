@@ -296,4 +296,14 @@ public class Vision {
 	return isTarget;
     }
     
+    public void writeImage() {
+        try {
+            ColorImage image = camera.getImage();
+            image.write("/CameraImage.bmp");
+        } catch (AxisCameraException ex) {
+            ex.printStackTrace();
+        } catch (NIVisionException ex) {
+            ex.printStackTrace();
+        }
+    }
 }

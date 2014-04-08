@@ -102,7 +102,7 @@ public class Auto {
                 thrower.setThrowSpeed(1.0);
                 thrower.setThrowArc(140);
                 hotCounter = 0;
-                statusCount += 2;
+                statusCount += 2;  //skip case 1 (vision done later)
                 break;
             case 1 :  // Watch for Hot
                 System.out.println("Looking");
@@ -122,18 +122,29 @@ public class Auto {
                     statusCount++;
                 }
                 break;
-            case 2 :  //Approach goal
-                if (Timer.getFPGATimestamp() < startTime + 3.65) {
+            case 2 :  //Approach goal 
+                if (Timer.getFPGATimestamp() < startTime + 2.6) {
                    driveSpeed = -0.82;
-                   if (Timer.getFPGATimestamp() < startTime + 2.2
+                   light.set(true);
+                   // Time to take a picture?
+                   if (Timer.getFPGATimestamp() > startTime + 1.83
                        && !pic) {
-                       vision.hot();
-                       pic = true;
+                        if (vision.hot()) {
+                            System.out.println("Hot");
+                            hotCounter ++;
+                        } else {
+                            System.out.println("Cold");
+                            hotCounter --;
+                        }
+                        //vision.writeImage();
+                        light.set(false);
+                        pic = true;
                    }
                 } else {
                    System.out.println("Stopped Moving");
                    driveSpeed = 0.0;
-                    statusCount++;
+                   vision.close();
+                   statusCount++;
                 }
                 break;
             case 3 :  // Hot or Cold decision
@@ -157,7 +168,7 @@ public class Auto {
         }
         // Thrower must be updated every loop
         thrower.update();
-        dt.arcadeDrive(driveSpeed, .04);  //need just a bit of right steer to go straight
+        dt.arcadeDrive(driveSpeed, -0.02);  //need just a bit of left steer to go straight
         
     }
     
