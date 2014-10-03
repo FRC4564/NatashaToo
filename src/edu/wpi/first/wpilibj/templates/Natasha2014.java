@@ -36,6 +36,7 @@ public class Natasha2014 extends SimpleRobot {
     AxisCamera camera;
     Vision vision = new Vision(camera);
     Auto auto = new Auto(thrower, dt, ds, centerLight, vision);
+    Capture capture = new Capture();
 
     /** 
      * Robot Initialization upon boot
@@ -84,7 +85,7 @@ public class Natasha2014 extends SimpleRobot {
                 Math.abs(rightstick.getY()) < .1) {
                 dt.arcadeDrive(dt.accelCurve(leftstick) * -1, leftstick.getX() * turnPercent);
             } else {
-                dt.arcadeDrive(dt.accelCurve(rightstick) * 1, rightstick.getX() * turnPercent);            }
+                dt.arcadeDrive(dt.accelCurve(rightstick) * 1, rightstick.getX() * turnPercent);    }
             
             
             // THROWER
@@ -99,7 +100,7 @@ public class Natasha2014 extends SimpleRobot {
                 // Truss toss
                 } else if (rightstick.getRawButton(Constants.JB_THROW_TRUSS_TOSS) ){
                     thrower.setThrowSpeed(1.0);
-                    thrower.setThrowArc(110);
+                    thrower.setThrowArc(125);
                     thrower.startThrow();
                 // Robot pass
                 } else if (rightstick.getRawButton(Constants.JB_THROW_ROBOT_PASS) ) {
@@ -116,6 +117,12 @@ public class Natasha2014 extends SimpleRobot {
                    thrower.setThrowSpeed(ds.getAnalogIn(1)/5);
                    thrower.setThrowArc((int)(ds.getAnalogIn(2)/5 * 200));
                    thrower.startThrow();
+                } else if (rightstick.getRawButton(Constants.JB_THROW_AUTO)) {
+                    thrower.setThrowSpeed(1.0);
+                    thrower.setThrowArc(Constants.THROWER_NOMINAL_ARC);
+                    if (sonar.getDistance() <= 12.0) {
+                        thrower.startThrow();
+                    }
                 }
             }
                 // Catch ball by braking at 110 arc while button is held
@@ -200,7 +207,7 @@ public class Natasha2014 extends SimpleRobot {
             System.out.print(", Dist: " + sonar.getDistance());
             System.out.println(", Bal: " + sonar.getBalance());
             System.out.println("DT speed" + dt.speed);*/
- 
+        
             Timer.delay(Constants.TELEOP_LOOP_DELAY_SECS);
         }        
     }

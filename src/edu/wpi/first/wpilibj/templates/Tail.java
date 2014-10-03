@@ -23,7 +23,7 @@ public class Tail {
     private double extendTime;
     // potentiometer values
     private double volts = 0;
-    private double voltsMin = 1.89;             // Minimum pot reading 1.89 / 3.28
+    private double voltsMin = 1.93;             // Minimum pot reading 1.89 / 3.28
     private double voltsMax = 3.21;             // Maximum pot reading 3.37 / 4.36
     private double voltsExtended = voltsMax - 0.03;  // safe extend
     private double voltsRetracted = voltsMin + 0.02; // safe retract

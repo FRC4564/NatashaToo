@@ -99,8 +99,8 @@ public class Auto {
                 dt.setSafetyEnabled(true);
                 startTime = Timer.getFPGATimestamp();
                 //thrower.initThrower();
-                thrower.setThrowSpeed(1.0);
-                thrower.setThrowArc(140);
+                thrower.setThrowSpeed(1.00);
+                thrower.setThrowArc(120);
                 hotCounter = 0;
                 statusCount += 2;  //skip case 1 (vision done later)
                 break;
@@ -124,7 +124,7 @@ public class Auto {
                 break;
             case 2 :  //Approach goal 
                 if (Timer.getFPGATimestamp() < startTime + 2.6) {
-                   driveSpeed = -0.82;
+                   driveSpeed = -0.72;
                    light.set(true);
                    // Time to take a picture?
                    if (Timer.getFPGATimestamp() > startTime + 1.83
@@ -168,7 +168,7 @@ public class Auto {
         }
         // Thrower must be updated every loop
         thrower.update();
-        dt.arcadeDrive(driveSpeed, -0.02);  //need just a bit of left steer to go straight
+        dt.arcadeDrive(driveSpeed, .19);  //need just a bit of right to go straight
         
     }
     

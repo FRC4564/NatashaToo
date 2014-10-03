@@ -57,6 +57,7 @@ public class Constants {
     public static final int JB_THROW_ANALOG = 7;          //Throw using analog sliders
     public static final int JB_THROW_CATCH = 10;          //Keeps thrower at top of throw
     public static final int JB_THROW_FREE = 11;           //Allows manual movement of thrower arm
+    public static final int JB_THROW_AUTO = 10;           //For running shot
     //Throw using analog inputs
     // leftstick
     public static final int JB_TAIL_EXTEND = 1;           //Extend tail-eject ball
@@ -81,7 +82,7 @@ public class Constants {
     public static final int THROWER_STATUS_BRAKE = 4;
     public static final int THROWER_STATUS_FREE = 5;
     //Standard arc used for normal throw and autonomous (roughly 4' to 7')
-    public static final int THROWER_NOMINAL_ARC = 148;
+    public static final int THROWER_NOMINAL_ARC = 160;
 
     //Sonic constants
     public static final int SONIC_BALANCE_EQUAL = 0;

@@ -26,8 +26,8 @@ public class Throweraterenator {
     
     DriverStation ds = DriverStation.getInstance();
 
-    public final double distMin = 3.0;           //min distance considered 'in range'
-    public final double distMax = 8.0;           //max distance considered 'in range'
+    public final double distMin = 4.0;           //min distance considered 'in range'
+    public final double distMax = 12.0;           //max distance considered 'in range'
 
     private double motorsSpeed = 0; // Current thrower motors speed
     private double throwSpeed = 0;
@@ -271,9 +271,9 @@ public class Throweraterenator {
         if (position() > 50) {          //Stow at full speed
             setMotors(stowSpeed);
         } else if (position() > 1) {    //Slow down as we approach stops
-            setMotors(-0.15);
+            setMotors(-0.11);
         } else if (position() < -1) {   //If we go too far come back out
-            setMotors(0.15);
+            setMotors(0.11);
         } else {                        //Stop at home
             setMotors(0);
             status = Constants.THROWER_STATUS_HOME;
@@ -297,8 +297,8 @@ public class Throweraterenator {
      * @param distance decimal feet to target
      */
     public void setTargetDistance(double distance) {
-        double distInterpolate = 5.0;   // distances below this use interpolation
-        int arcMin = 125;
+        double distInterpolate = 6.0;   // distances below this use interpolation
+        int arcMin = 159;
         int arcMax = Constants.THROWER_NOMINAL_ARC;
         int speedMin = 1;
         int speedMax = 1;
@@ -322,11 +322,18 @@ public class Throweraterenator {
             setThrowSpeed(speedMax);
             inRange = false;
         }
+        if (distance >= 9.0) {
+            setThrowSpeed(.9);
+        } else {
+            setThrowSpeed(1.0);
+        }
     }
     
     public double interpolate(double targetMin, double targetMax,
             double sourceMin, double sourceMax, double val) {
             double proportion = (val - sourceMin) / (sourceMax - sourceMin);
-            return ((targetMax - targetMin) * proportion + targetMin);
+            double result = ((targetMax - targetMin) * proportion + targetMin);
+//            System.out.println(targetMin+ " " +targetMax+ " "+sourceMin+ " " +sourceMax +" "+ val+" "+result);
+            return result;
         }
 }
