@@ -37,7 +37,9 @@ public class Natasha2014 extends SimpleRobot {
     Vision vision = new Vision(camera);
     Auto auto = new Auto(thrower, dt, ds, centerLight, vision);
     Capture capture = new Capture();
+    boolean recording = false;  //Capturing joystick movements?
 
+    
     /** 
      * Robot Initialization upon boot
      */
@@ -83,13 +85,28 @@ public class Natasha2014 extends SimpleRobot {
             
             if (Math.abs(rightstick.getX()) < .1 &&
                 Math.abs(rightstick.getY()) < .1) {
-                dt.arcadeDrive(dt.accelCurve(leftstick) * -1, leftstick.getX() * turnPercent);
+                dt.arcadeDrive(dt.accelCurve(leftstick.getY()) * -1, leftstick.getX() * turnPercent);
             } else {
-                dt.arcadeDrive(dt.accelCurve(rightstick) * 1, rightstick.getX() * turnPercent);    }
-            
+                dt.arcadeDrive(dt.accelCurve(rightstick.getY()) * 1, rightstick.getX() * turnPercent);    }
+
+            //Record leftstick Joystick input when button 8 or 9 is held
+            if (leftstick.getRawButton(Constants.JB_LIGHT_CENTER_1) ||
+                leftstick.getRawButton(Constants.JB_LIGHT_CENTER_2)) {
+                if (recording) {
+                    capture.add(leftstick.getX() * turnPercent, leftstick.getY() * -1, leftstick.getRawButton(1));
+                } else {
+                    capture.start();
+                    recording = true; 
+                }
+            } else {  // turn off recording
+                if (recording) {
+                    capture.print();
+                    recording = false;
+                }
+            }            
             
             // THROWER
-            // A throw tail be home and Throw Safety button be pressed.
+            // To throw, tail must be home and Throw Safety button be pressed.
             if (tail.getStatus() == Constants.TAIL_STATUS_RETRACTED &&
                 rightstick.getRawButton(Constants.JB_THROW_SAFETY) ) {
                 // Auto ranged throw
@@ -183,8 +200,6 @@ public class Natasha2014 extends SimpleRobot {
             }
                 
             // DEBUG
-            //System.out.print("pot: " + tail.getTheta());
-            //System.out.print(Timer.getFPGATimestamp() );
             SmartDashboard.putNumber("Left dist",sonar.getLeftDistance());
             SmartDashboard.putNumber("Right dist",sonar.getRightDistance());
             SmartDashboard.putNumber("Thrower Status (0=home 1=throw 2=stow 3=init 4=brake)",thrower.getStatus());
@@ -197,104 +212,33 @@ public class Natasha2014 extends SimpleRobot {
             SmartDashboard.putBoolean("In Range",thrower.inRange(sonar.getDistance()));
             SmartDashboard.putNumber("Distance" , sonar.getDistance());
             SmartDashboard.putNumber("Turn Offset", (ds.getAnalogIn(3) / 5 * 0.2));
-            
-            //System.out.println(", arc: " + thrower.getThrowArc() );
-            /*System.out.print(" sonar: " + sonar.getDistance() );
-            System.out.println(" status: " + thrower.getStatus() );
-            
-            System.out.print("L: " + sonar.getLeftDistance());
-            System.out.print(", R: " + sonar.getRightDistance());
-            System.out.print(", Dist: " + sonar.getDistance());
-            System.out.println(", Bal: " + sonar.getBalance());
-            System.out.println("DT speed" + dt.speed);*/
-        
+     
             Timer.delay(Constants.TELEOP_LOOP_DELAY_SECS);
         }        
-    }
+    }  //end operatorControl
     
     /**
      * This function is called once each time the robot enters test mode.
      */
     public void test() {
-        //vision.init();
-        //centerLight.set(true);
-        //Timer.delay(1.5);
-        while (!leftstick.getRawButton(6)) {
-            if (leftstick.getRawButton(1)) {
-                tail.setBaseSpeed(.05);
-            } else {
-                tail.setBaseSpeed(0);
-            }
-            System.out.println(tail.getTheta());
-            Timer.delay(Constants.TELEOP_LOOP_DELAY_SECS);
-        }
+        //Play back recorded movements
+        int playIndex = 0;
         
-        /*Solenoid left = new Solenoid(1);
-        Solenoid right = new Solenoid(2);
-        Solenoid comm = new Solenoid(3);
-        while (isEnabled()) {
-            sonar.sonarLeftEnable.set(true);
-            sonar.sonarRightEnable.set(true);
-            System.out.print("L: " + sonar.getLeftDistance());
-            System.out.print(", R: " + sonar.getRightDistance());
-            System.out.print(", Dist: " + sonar.getDistance());
-            System.out.println(", Bal: " + sonar.getBalance());
+        if (capture.count()>0) {
+            leftLight.set(true);
+            rightLight.set(true);
+
+            dt.setSafetyEnabled(true);
+            while (playIndex <= capture.count() && isEnabled()) {
+                dt.arcadeDrive(dt.accelCurve(capture.y(playIndex)), capture.x(playIndex));
+                playIndex ++;
+                Timer.delay(Constants.TELEOP_LOOP_DELAY_SECS);
+            }
+            dt.arcadeDrive(0.0,0.0);
             
-            if (sonar.getBalance() == Constants.SONIC_BALANCE_LEFT
-                || sonar.getBalance() == Constants.SONIC_BALANCE_EQUAL) {
-                left.set(true);
-            } else { 
-                left.set(false);
-            }
-            if (sonar.getBalance() == Constants.SONIC_BALANCE_RIGHT
-                || sonar.getBalance() == Constants.SONIC_BALANCE_EQUAL) {
-                right.set(true);
-            } else { 
-                right.set(false);
-            }
-            
-            Timer.delay(.1);
+            leftLight.set(false);
+            rightLight.set(false);
         }
-        
-        Vision vision = new Vision();
-        double startTime = Timer.getFPGATimestamp();
-        thrower.initThrower();
-        // drive forward
-        dt.setSafetyEnabled(true);
-        dt.arcadeDrive(-0.7,0);
-        while (Timer.getFPGATimestamp() < startTime + 2.9) {  //2.9 secs run time
-            thrower.update();
-        }
-        dt.arcadeDrive(0,0);
-        // Hot test
-        int hotCounter = 0;
-        while (Timer.getFPGATimestamp()< startTime + 4) {
-            if (vision.hot()) {
-                hotCounter ++;
-            }
-            else {
-                hotCounter --;
-            }
-            thrower.update();
-            Timer.delay(0.1);
-        }
-        //Throw test
-        thrower.setThrowSpeed(1.0);
-        thrower.setThrowArc((int)(ds.getAnalogIn(2)/5 * 130));
-        if (hotCounter > 0) {
-            System.out.println("Shooting");
-          } else {
-            System.out.println("Not hot, waiting");
-            Timer.delay(2);
-            System.out.println("Shooting");
-        }
-        thrower.startThrow();
-        while (thrower.getStatus() != Constants.THROWER_STATUS_HOME) {
-            thrower.update();
-            //System.out.println(thrower.getStatus());
-            Timer.delay(Constants.TELEOP_LOOP_DELAY_SECS);
-        }
-        //Turn around*/
-        
-    }
-}
+    } // test
+    
+} //End SimpleRobot

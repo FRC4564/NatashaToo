@@ -31,15 +31,16 @@ public class DriveTrain extends RobotDrive{
        setInvertedMotor(RobotDrive.MotorType.kRearRight,true);
     }
     
-    public double accelCurve(Joystick stick) {
-        if (Math.abs(speed - stick.getY()) > accel) {
-            if (speed > stick.getY()) {
+    // Set speed based on Y value from joystick and a straight line acceleration curve
+    public double accelCurve(double Y) {
+        if (Math.abs(speed - Y) > accel) {
+            if (speed > Y) {
                 speed = speed - accel;
             } else {
                 speed = speed + accel;
             }
         } else {
-            speed = stick.getY();
+            speed = Y;
         }
         return speed;
     }

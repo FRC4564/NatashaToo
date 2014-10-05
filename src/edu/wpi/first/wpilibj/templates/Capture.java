@@ -5,7 +5,6 @@
  */
 package edu.wpi.first.wpilibj.templates;
 
-import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -14,23 +13,26 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class Capture {
     
-    double[] captureX = new double[500];
-    double[] captureY = new double[500];
-    boolean[] captureTrigger = new boolean[500];
+    private final static int MAX_COUNT = 500;
+    double[] captureX = new double[MAX_COUNT];
+    double[] captureY = new double[MAX_COUNT];
+    boolean[] captureTrigger = new boolean[MAX_COUNT];
     private int captureCount = 0;
     private double captureStartTime;
-//    AnalogChannel voltage = new AnalogChannel(8);
+
     
     public void start() {
         captureStartTime = Timer.getFPGATimestamp();
         captureCount = 0;
     }
     
-    public void add(double x,double y, boolean trigger) {
-        captureX[captureCount] = x;
-        captureY[captureCount] = y;
-        captureTrigger[captureCount] = trigger;
-        captureCount++;
+    public void add(double x, double y, boolean trigger) {
+        if (captureCount <= MAX_COUNT) {
+            captureX[captureCount] = x;
+            captureY[captureCount] = y;
+            captureTrigger[captureCount] = trigger;
+            captureCount++;
+        }
     }
     
     public int count() {
