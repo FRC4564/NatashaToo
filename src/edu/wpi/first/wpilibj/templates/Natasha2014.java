@@ -222,16 +222,17 @@ public class Natasha2014 extends SimpleRobot {
      */
     public void test() {
         //Play back recorded movements
-        int playIndex = 0;
+        int i = 0;  //playback index
         
+        System.out.println("Capture playback..."+capture.count()+" steps.");
         if (capture.count()>0) {
             leftLight.set(true);
             rightLight.set(true);
 
             dt.setSafetyEnabled(true);
-            while (playIndex <= capture.count() && isEnabled()) {
-                dt.arcadeDrive(dt.accelCurve(capture.y(playIndex)), capture.x(playIndex));
-                playIndex ++;
+            while (i <= capture.count() && isEnabled()) {
+                dt.arcadeDrive(dt.accelCurve(capture.y(i)), capture.x(i));
+                i ++;
                 Timer.delay(Constants.TELEOP_LOOP_DELAY_SECS);
             }
             dt.arcadeDrive(0.0,0.0);
