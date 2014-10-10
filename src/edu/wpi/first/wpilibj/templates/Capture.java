@@ -13,24 +13,28 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class Capture {
     
-    private final static int MAX_COUNT = 500;
+    private final static int MAX_COUNT = 1000;
     double[] captureX = new double[MAX_COUNT];
     double[] captureY = new double[MAX_COUNT];
-    boolean[] captureTrigger = new boolean[MAX_COUNT];
+    boolean[] captureExtend = new boolean[MAX_COUNT];
+    boolean[] captureRetract = new boolean[MAX_COUNT];
+    boolean[] captureThrower = new boolean[MAX_COUNT];
     private int captureCount = 0;
     private double captureStartTime;
 
-    
+
     public void start() {
         captureStartTime = Timer.getFPGATimestamp();
         captureCount = 0;
     }
     
-    public void add(double x, double y, boolean trigger) {
+    public void add(double x, double y, boolean extend,boolean retract, boolean thrower) {
         if (captureCount <= MAX_COUNT) {
             captureX[captureCount] = x;
             captureY[captureCount] = y;
-            captureTrigger[captureCount] = trigger;
+            captureExtend[captureCount] = extend;
+            captureExtend[captureCount] = retract;
+            captureThrower[captureCount] = thrower;
             captureCount++;
         }
     }
@@ -44,7 +48,9 @@ public class Capture {
         for (int i = 0; i <= captureCount; i++) {
             System.out.print(captureX[i] + ", ");
             System.out.print(captureY[i] + ", ");
-            System.out.println(captureTrigger[i]);
+            System.out.print(captureExtend[i] + ", ");
+            System.out.print(captureRetract[i] + ", ");
+            System.out.println(captureThrower[i]);
         }
     }
     
@@ -57,7 +63,15 @@ public class Capture {
         return captureY[i];
     }
     
-    public boolean trigger(int i) {
-        return captureTrigger[i];
+    public boolean extend(int i) {
+        return captureExtend[i];
+    }
+
+    public boolean retract(int i) {
+        return captureExtend[i];
+    }
+
+    public boolean thrower(int i) {
+        return captureThrower[i];
     }
 }

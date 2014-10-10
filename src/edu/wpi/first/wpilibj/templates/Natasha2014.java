@@ -24,6 +24,9 @@ public class Natasha2014 extends SimpleRobot {
     double turnPercent = .9;
     DriveTrain dt = new DriveTrain(Constants.frontLeft, Constants.rearLeft,
                                    Constants.frontRight, Constants.rearRight);
+    double driveX = 0.0;   
+    double driveY = 0.0;
+    double loopDelay = 0.0;  //Timer value to control loop rate
     Throweraterenator thrower = new Throweraterenator();
     Tail tail = new Tail();
     SinisterSonar sonar = new SinisterSonar();
@@ -75,7 +78,7 @@ public class Natasha2014 extends SimpleRobot {
         System.out.println("Teleop...");
         dt.setSafetyEnabled(true);
         while (isOperatorControl() && isEnabled()) {
-            
+             loopDelay = Timer.getFPGATimestamp() + Constants.TELEOP_LOOP_DELAY_SECS;           
             // DRIVETRAIN
             if (tail.getStatus() == Constants.TAIL_STATUS_EXTENDED) {
                 turnPercent = .9 * .75;
@@ -85,26 +88,14 @@ public class Natasha2014 extends SimpleRobot {
             
             if (Math.abs(rightstick.getX()) < .1 &&
                 Math.abs(rightstick.getY()) < .1) {
-                dt.arcadeDrive(dt.accelCurve(leftstick.getY()) * -1, leftstick.getX() * turnPercent);
+                driveX = leftstick.getX() * turnPercent;
+                driveY = leftstick.getY() * -1;
             } else {
-                dt.arcadeDrive(dt.accelCurve(rightstick.getY()) * 1, rightstick.getX() * turnPercent);    }
+                driveX = rightstick.getX() * turnPercent;
+                driveY = rightstick.getY();
+            }
+            dt.arcadeDrive(dt.accelCurve(driveY), driveX);
 
-            //Record leftstick Joystick input when button 8 or 9 is held
-            if (leftstick.getRawButton(Constants.JB_LIGHT_CENTER_1) ||
-                leftstick.getRawButton(Constants.JB_LIGHT_CENTER_2)) {
-                if (recording) {
-                    capture.add(leftstick.getX() * turnPercent, leftstick.getY() * -1, leftstick.getRawButton(1));
-                } else {
-                    capture.start();
-                    recording = true; 
-                }
-            } else {  // turn off recording
-                if (recording) {
-                    capture.print();
-                    recording = false;
-                }
-            }            
-            
             // THROWER
             // To throw, tail must be home and Throw Safety button be pressed.
             if (tail.getStatus() == Constants.TAIL_STATUS_RETRACTED &&
@@ -121,7 +112,8 @@ public class Natasha2014 extends SimpleRobot {
                     thrower.startThrow();
                 // Robot pass
                 } else if (rightstick.getRawButton(Constants.JB_THROW_ROBOT_PASS) ) {
-                    thrower.setThrowSpeed(0.6);
+                    thrower.setThrowSpeed(0.4);
+                    //thrower.setThrowSpeed(0.6);
                     thrower.setThrowArc(90);
                     thrower.startThrow();
                 // Manual throw - no sonar
@@ -212,8 +204,34 @@ public class Natasha2014 extends SimpleRobot {
             SmartDashboard.putBoolean("In Range",thrower.inRange(sonar.getDistance()));
             SmartDashboard.putNumber("Distance" , sonar.getDistance());
             SmartDashboard.putNumber("Turn Offset", (ds.getAnalogIn(3) / 5 * 0.2));
-     
-            Timer.delay(Constants.TELEOP_LOOP_DELAY_SECS);
+
+            // RECORD
+            
+            //Record leftstick Joystick input when button 8 or 9 is held
+            if (leftstick.getRawButton(Constants.JB_LIGHT_CENTER_1) ||
+                leftstick.getRawButton(Constants.JB_LIGHT_CENTER_2)) {
+                if (recording == false) {
+                    capture.start();
+                    recording = true; 
+                }
+                capture.add(driveX, driveY, leftstick.getRawButton(1),
+                    leftstick.getRawButton(2),leftstick.getRawButton(Constants.JB_THROW_ROBOT_PASS));
+            } else {  // turn off recording
+                if (recording) {
+                    capture.print();
+                    recording = false;
+                }
+            }            
+            
+
+            
+            
+            
+//            Timer.delay(Constants.TELEOP_LOOP_DELAY_SECS);
+            while (Timer.getFPGATimestamp() < loopDelay) {
+                Timer.delay(.005);
+            }
+            // loopDelay = Timer.getFPGATimestamp() + Constants.TELEOP_LOOP_DELAY_SECS;           
         }        
     }  //end operatorControl
     
@@ -231,9 +249,30 @@ public class Natasha2014 extends SimpleRobot {
 
             dt.setSafetyEnabled(true);
             while (i <= capture.count() && isEnabled()) {
+                loopDelay = Timer.getFPGATimestamp() + Constants.TELEOP_LOOP_DELAY_SECS;           
                 dt.arcadeDrive(dt.accelCurve(capture.y(i)), capture.x(i));
+ 
+                if (capture.thrower(i)) {
+                    thrower.setThrowSpeed(0.4);
+                    thrower.setThrowArc(90);
+                    thrower.startThrow();
+                }
+                
+                if (capture.extend(i)) {
+                    tail.startExtend();
+                }
+                
+                if (capture.retract(i)) {
+                    tail.startRetract();
+                }
+                
+                tail.update();
+                thrower.update();
+                
                 i ++;
-                Timer.delay(Constants.TELEOP_LOOP_DELAY_SECS);
+                while (Timer.getFPGATimestamp() < loopDelay) {
+                    Timer.delay(.005);
+                }
             }
             dt.arcadeDrive(0.0,0.0);
             
