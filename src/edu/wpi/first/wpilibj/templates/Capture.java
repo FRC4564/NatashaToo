@@ -19,22 +19,25 @@ public class Capture {
     boolean[] captureExtend = new boolean[MAX_COUNT];
     boolean[] captureRetract = new boolean[MAX_COUNT];
     boolean[] captureThrower = new boolean[MAX_COUNT];
+    boolean[] captureLight = new boolean[MAX_COUNT];
     private int captureCount = 0;
     private double captureStartTime;
 
 
     public void start() {
         captureStartTime = Timer.getFPGATimestamp();
-        captureCount = 0;
+        captureCount = 0; 
     }
     
-    public void add(double x, double y, boolean extend,boolean retract, boolean thrower) {
+    public void add(double x, double y, boolean extend, boolean retract,
+                    boolean thrower, boolean light) {
         if (captureCount <= MAX_COUNT) {
             captureX[captureCount] = x;
             captureY[captureCount] = y;
             captureExtend[captureCount] = extend;
-            captureExtend[captureCount] = retract;
+            captureRetract[captureCount] = retract;
             captureThrower[captureCount] = thrower;
+            captureLight[captureCount] = light;
             captureCount++;
         }
     }
@@ -44,13 +47,15 @@ public class Capture {
     }
     
     public void print() {
-        System.out.println("There are " + captureCount + " data points:");
+        System.out.println("captureCount=" + captureCount + ";");
         for (int i = 0; i <= captureCount; i++) {
-            System.out.print(captureX[i] + ", ");
-            System.out.print(captureY[i] + ", ");
-            System.out.print(captureExtend[i] + ", ");
-            System.out.print(captureRetract[i] + ", ");
-            System.out.println(captureThrower[i]);
+            System.out.print("captureX["+i+"]="+captureX[i] + "; ");
+            System.out.print("captureY["+i+"]="+captureY[i] + "; ");
+            System.out.print("captureExtend["+i+"]="+captureExtend[i] + "; ");
+            System.out.print("captureRetract["+i+"]="+captureRetract[i] + "; ");
+            System.out.print("captureThrower["+i+"]="+captureThrower[i] + "; ");
+            System.out.print("captureLight["+i+"]="+captureLight[i] + "; ");
+            System.out.println();
         }
     }
     
@@ -68,10 +73,17 @@ public class Capture {
     }
 
     public boolean retract(int i) {
-        return captureExtend[i];
+        return captureRetract[i];
     }
 
     public boolean thrower(int i) {
         return captureThrower[i];
+    }
+    
+    public boolean light(int i) {
+        return captureLight[i];
+    }
+    public void load() {
+        captureCount=0;
     }
 }

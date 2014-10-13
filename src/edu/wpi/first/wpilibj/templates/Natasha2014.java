@@ -207,15 +207,22 @@ public class Natasha2014 extends SimpleRobot {
 
             // RECORD
             
-            //Record leftstick Joystick input when button 8 or 9 is held
-            if (leftstick.getRawButton(Constants.JB_LIGHT_CENTER_1) ||
-                leftstick.getRawButton(Constants.JB_LIGHT_CENTER_2)) {
+            //Record while Record button is held
+            if (leftstick.getRawButton(Constants.JB_RECORD) ||
+                rightstick.getRawButton(Constants.JB_RECORD)) {
                 if (recording == false) {
                     capture.start();
                     recording = true; 
                 }
-                capture.add(driveX, driveY, leftstick.getRawButton(1),
-                    leftstick.getRawButton(2),leftstick.getRawButton(Constants.JB_THROW_ROBOT_PASS));
+                capture.add(driveX, driveY, 
+                    leftstick.getRawButton(Constants.JB_TAIL_EXTEND),
+                    leftstick.getRawButton(Constants.JB_TAIL_RETRACT),
+                    rightstick.getRawButton(Constants.JB_THROW_SAFETY)
+                        && rightstick.getRawButton(Constants.JB_THROW_ROBOT_PASS),
+                    rightstick.getRawButton(Constants.JB_LIGHT_CENTER_1)
+                        || rightstick.getRawButton(Constants.JB_LIGHT_CENTER_2)
+                        || leftstick.getRawButton(Constants.JB_LIGHT_CENTER_1)
+                        || leftstick.getRawButton(Constants.JB_LIGHT_CENTER_2));
             } else {  // turn off recording
                 if (recording) {
                     capture.print();
@@ -223,15 +230,11 @@ public class Natasha2014 extends SimpleRobot {
                 }
             }            
             
-
-            
-            
-            
-//            Timer.delay(Constants.TELEOP_LOOP_DELAY_SECS);
+//          LOOP DELAY
             while (Timer.getFPGATimestamp() < loopDelay) {
                 Timer.delay(.005);
             }
-            // loopDelay = Timer.getFPGATimestamp() + Constants.TELEOP_LOOP_DELAY_SECS;           
+          
         }        
     }  //end operatorControl
     
@@ -249,33 +252,50 @@ public class Natasha2014 extends SimpleRobot {
 
             dt.setSafetyEnabled(true);
             while (i <= capture.count() && isEnabled()) {
-                loopDelay = Timer.getFPGATimestamp() + Constants.TELEOP_LOOP_DELAY_SECS;           
+                loopDelay = Timer.getFPGATimestamp() + Constants.TELEOP_LOOP_DELAY_SECS;
+                
+                //DRIVETRAIN
                 dt.arcadeDrive(dt.accelCurve(capture.y(i)), capture.x(i));
  
-                if (capture.thrower(i)) {
+                //THROWER
+                if (tail.getStatus() == Constants.TAIL_STATUS_RETRACTED &&
+                        capture.thrower(i)) {
                     thrower.setThrowSpeed(0.4);
                     thrower.setThrowArc(90);
                     thrower.startThrow();
                 }
+                thrower.update();   
                 
-                if (capture.extend(i)) {
-                    tail.startExtend();
+                //TAIL
+                if (thrower.getStatus() == Constants.THROWER_STATUS_HOME) {
+                    if (capture.extend(i)) {
+                        tail.startExtend(); }
+
+                    if (capture.retract(i)) {
+                        tail.startRetract(); }
+                    
+                    if (!ballDetect.get()
+                        && tail.getStatus() == Constants.TAIL_STATUS_EXTENDED) {
+                        tail.startRetract(); }
                 }
-                
-                if (capture.retract(i)) {
-                    tail.startRetract();
-                }
-                
                 tail.update();
-                thrower.update();
                 
-                i ++;
+                //LIGHT
+                centerLight.set(capture.light(i));
+                leftLight.set(!capture.light(i));
+                rightLight.set(!capture.light(i));
+                
+                //WAIT BEFORE LOOPING
                 while (Timer.getFPGATimestamp() < loopDelay) {
                     Timer.delay(.005);
                 }
+                
+                //NEXT FRAME
+                i ++;
             }
-            dt.arcadeDrive(0.0,0.0);
             
+            dt.arcadeDrive(0.0,0.0);
+            centerLight.set(false);
             leftLight.set(false);
             rightLight.set(false);
         }

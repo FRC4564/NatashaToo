@@ -58,13 +58,14 @@ public class Constants {
     public static final int JB_THROW_CATCH = 10;          //Keeps thrower at top of throw
     public static final int JB_THROW_FREE = 11;           //Allows manual movement of thrower arm
     public static final int JB_THROW_AUTO = 10;           //For running shot
-    //Throw using analog inputs
     // leftstick
     public static final int JB_TAIL_EXTEND = 1;           //Extend tail-eject ball
     public static final int JB_TAIL_RETRACT = 2;          //Retract tail-pickup ball
-    
+    public static final int JB_RECORD = 6;                //Enable recording
     public static final int JB_LIGHT_CENTER_1 = 8;
     public static final int JB_LIGHT_CENTER_2 = 9;
+    
+
  
     
     // Miscellaneous
