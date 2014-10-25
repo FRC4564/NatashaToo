@@ -53,6 +53,8 @@ public class Natasha2014 extends SimpleRobot {
 
         thrower.setStowSpeed(-0.35);
         thrower.initThrower();
+        
+        capture.load();
 
         vision.init();
     }
@@ -95,6 +97,7 @@ public class Natasha2014 extends SimpleRobot {
                 driveY = rightstick.getY();
             }
             dt.arcadeDrive(dt.accelCurve(driveY), driveX);
+            dt.arcadeDrive(dt.accelCurve(driveY), driveX);
 
             // THROWER
             // To throw, tail must be home and Throw Safety button be pressed.
@@ -112,9 +115,8 @@ public class Natasha2014 extends SimpleRobot {
                     thrower.startThrow();
                 // Robot pass
                 } else if (rightstick.getRawButton(Constants.JB_THROW_ROBOT_PASS) ) {
-                    thrower.setThrowSpeed(0.4);
-                    //thrower.setThrowSpeed(0.6);
-                    thrower.setThrowArc(90);
+                    thrower.setThrowSpeed(0.5);
+                    thrower.setThrowArc(108);
                     thrower.startThrow();
                 // Manual throw - no sonar
                 } else if (rightstick.getRawButton(Constants.JB_THROW_MANUAL) ){
@@ -133,8 +135,15 @@ public class Natasha2014 extends SimpleRobot {
                         thrower.startThrow();
                     }
                 }
-            }
-                // Catch ball by braking at 110 arc while button is held
+
+                  //THIS BLOCK WAS ADDED FOR TEMPORARY NERFING
+                  if (rightstick.getRawButton(Constants.JB_THROW_ROBOT_PASS) ) {
+                    thrower.setThrowSpeed(0.5);
+                    thrower.setThrowArc(108);
+                    thrower.startThrow();
+                    }
+                  }
+               // Catch ball by braking at 110 arc while button is held
             if (leftstick.getRawButton(Constants.JB_THROW_CATCH)) {
                 thrower.setThrowSpeed(0.3);
                 thrower.setThrowArc(110);
@@ -143,7 +152,7 @@ public class Natasha2014 extends SimpleRobot {
             } else {
                 thrower.releaseBrake();
             }
-        
+      
             thrower.update();
                       
             // SCORPION TAIL
