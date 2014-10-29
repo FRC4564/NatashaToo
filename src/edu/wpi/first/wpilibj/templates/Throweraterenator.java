@@ -40,7 +40,7 @@ public class Throweraterenator {
     //private double brakeTime = 0;
     private boolean brake = false;  //when brake is on, stowing is held off
     private boolean inRange = false; //True if target distance is in shooting range
-    
+    private double ThrowerDelay = 0.0;
     // Initialization variables
     private double initTime = 0;
     private int initPosition = 0;
@@ -170,11 +170,14 @@ public class Throweraterenator {
      */
     public void startThrow() {
         if (status == Constants.THROWER_STATUS_HOME) {
-             status = Constants.THROWER_STATUS_THROW;
-             //Time that the thrower has to stop at if throw isn't completed
-             stopTime = Timer.getFPGATimestamp() + .3;
-             //trace.start();
+           if (ThrowerDelay < Timer.getFPGATimestamp()) {
+               ThrowerDelay = Timer.getFPGATimestamp() + 5;
+               status = Constants.THROWER_STATUS_THROW;
+               //Time that the thrower has to stop at if throw isn't completed
+               stopTime = Timer.getFPGATimestamp() + .3;
+               //trace.start();
              //trace.add(position(), getThrowArc(), getStatus());
+           }
         }
     }
     
