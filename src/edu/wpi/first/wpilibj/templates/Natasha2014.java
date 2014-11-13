@@ -115,8 +115,8 @@ public class Natasha2014 extends SimpleRobot {
                     thrower.startThrow();
                 // Robot pass
                 } else if (rightstick.getRawButton(Constants.JB_THROW_ROBOT_PASS) ) {
-                    thrower.setThrowSpeed(0.5);
-                    thrower.setThrowArc(108);
+                    thrower.setThrowSpeed(0.8);
+                    thrower.setThrowArc(103);
                     thrower.startThrow();
                 // Manual throw - no sonar
                 } else if (rightstick.getRawButton(Constants.JB_THROW_MANUAL) ){
