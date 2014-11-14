@@ -115,7 +115,7 @@ public class Natasha2014 extends SimpleRobot {
                     thrower.startThrow();
                 // Robot pass
                 } else if (rightstick.getRawButton(Constants.JB_THROW_ROBOT_PASS) ) {
-                    thrower.setThrowSpeed(0.8);
+                    thrower.setThrowSpeed(0.86);
                     thrower.setThrowArc(103);
                     thrower.startThrow();
                 // Manual throw - no sonar
@@ -135,15 +135,9 @@ public class Natasha2014 extends SimpleRobot {
                         thrower.startThrow();
                     }
                 }
+            }
 
-                  //THIS BLOCK WAS ADDED FOR TEMPORARY NERFING
-                  if (rightstick.getRawButton(Constants.JB_THROW_ROBOT_PASS) ) {
-                    thrower.setThrowSpeed(0.5);
-                    thrower.setThrowArc(108);
-                    thrower.startThrow();
-                    }
-                  }
-               // Catch ball by braking at 110 arc while button is held
+            // Catch ball by braking at 110 arc while button is held
             if (leftstick.getRawButton(Constants.JB_THROW_CATCH)) {
                 thrower.setThrowSpeed(0.3);
                 thrower.setThrowArc(110);
