@@ -195,8 +195,6 @@ public class Throweraterenator {
             updateThrow();
         } else if (status == Constants.THROWER_STATUS_BRAKE) {
             updatebrake();
-        } else if (!ds.getDigitalIn(1)) {
-            setMotors(0);
         } else {
             updateStow();
         }
@@ -274,7 +272,7 @@ public class Throweraterenator {
         if (position() > 50) {          //Stow at full speed
             setMotors(stowSpeed);
         } else if (position() > 1) {    //Slow down as we approach stops
-            setMotors(-0.11);
+            setMotors(-0.20);
         } else if (position() < -1) {   //If we go too far come back out
             setMotors(0.11);
         } else {                        //Stop at home
@@ -301,7 +299,7 @@ public class Throweraterenator {
      */
     public void setTargetDistance(double distance) {
         double distInterpolate = 6.0;   // distances below this use interpolation
-        int arcMin = 159;
+        int arcMin = 137;
         int arcMax = Constants.THROWER_NOMINAL_ARC;
         int speedMin = 1;
         int speedMax = 1;
